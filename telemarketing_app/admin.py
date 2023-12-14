@@ -2,16 +2,16 @@ from django.contrib import admin
 from .models import Client, Employee, Account, Work
 
 class AccountAdmin(admin.ModelAdmin):
-    list_display = ('id_doc', 'doc_name', 'doc_type','doc_date')
-    search_fields=('id_doc','doc_name','doc_type','doc_date')
+    list_display = ('id_account', 'doc_name', 'doc_type','doc_date', 'id_client')
+    search_fields=('id_account','doc_name','doc_type','doc_date','id_client')
 
 class ClientAdmin(admin.ModelAdmin):
     list_display=('id_client', 'first_name', 'last_name', 'patronymic', 'date_birth',
-                  'id_passport', 'gender', 'phone_number', 'id_account')
+                  'id_passport', 'gender', 'phone_number')
 
 class EmployeeAdmin(admin.ModelAdmin):
     list_display=('id_employee', 'first_name', 'last_name', 'patronymic', 'date_birth',
-                  'id_passport', 'gender', 'phone_number', 'date_employment','date_dismissal', 'id_work')
+                  'id_passport', 'gender', 'phone_number', 'position', 'date_employment', 'date_dismissal')
 
 
 class WorkAdmin(admin.ModelAdmin):
@@ -19,7 +19,7 @@ class WorkAdmin(admin.ModelAdmin):
     def my_Employee(self, obj):
         return f'{obj.employee.id_employee} {obj.employee.last_name}'
     def my_Documents(self, obj):
-        return f'{obj.documents.id_doc} {obj.documents.doc_name}'
+        return f'{obj.documents.id_work} {obj.documents.doc_name}'
     def my_phone(self, obj):
         return f'{obj.phone_number}'
 

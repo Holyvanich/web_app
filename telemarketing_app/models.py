@@ -11,20 +11,6 @@ def validate_phone_number(phone_number):
             gettext_lazy('%(phone_number)s некорректный номер'),
             params={'phone_number': phone_number}
         )
-
-class Account(models.Model):
-    class Meta:
-        db_table="accounts"
-        verbose_name="Аккаунты"
-        verbose_name_plural="Аккаунты"
-
-    id_doc=models.IntegerField(primary_key=True, verbose_name="ID аккаунта")
-    doc_name=models.TextField(verbose_name="Ограничения")
-    doc_type=models.TextField(verbose_name="Пакет услуг")
-    doc_date=models.DateField(verbose_name="Дата создания аккаунта")
-
-    def __str__(self) -> str:  
-        return f'''{self.id_doc} {self.doc_name} {self.doc_type} {self.doc_date}'''
         
 class Client(models.Model):
     class Meta:
@@ -45,12 +31,25 @@ class Client(models.Model):
     id_passport = models.IntegerField(verbose_name="Номер и серия паспорта", blank=True, null=True)
     gender = models.CharField(verbose_name="Пол", choices=Genders, max_length=1) 
     phone_number = models.TextField(verbose_name="Номер телефона", validators=[validate_phone_number])
-    id_account = models.ForeignKey(Account, on_delete=models.RESTRICT, verbose_name='ID аккаунта', blank=True, null=True)
 
     def __str__(self) -> str:  
-        return f'''{self.id_client} {self.first_name} {self.last_name} {self.patronymic} {self.date_birth} {self.id_passport}
-        {self.gender} {self.phone_number}'''
+        return f'''{self.id_client}'''
         
+class Account(models.Model):
+    class Meta:
+        db_table="accounts"
+        verbose_name="Аккаунты"
+        verbose_name_plural="Аккаунты"
+
+    id_account=models.IntegerField(primary_key=True, verbose_name="ID аккаунта")
+    doc_name=models.TextField(verbose_name="Ограничения")
+    doc_type=models.TextField(verbose_name="Пакет услуг")
+    doc_date=models.DateField(verbose_name="Дата создания аккаунта")
+    id_client = models.ForeignKey(Client, on_delete=models.RESTRICT, verbose_name='ID клиента', blank=True, null=True)
+
+    def __str__(self) -> str:  
+        return f'''{self.id_account}'''
+    
 class Employee(models.Model):
     class Meta:
         db_table = "employee"
@@ -70,9 +69,9 @@ class Employee(models.Model):
     id_passport = models.IntegerField(verbose_name="Номер и серия паспорта", blank=True, null=True)
     gender = models.CharField(verbose_name="Пол", choices=Genders, max_length=1) 
     phone_number = models.TextField(verbose_name="Номер телефона", validators=[validate_phone_number])
+    position = models.TextField(verbose_name="Должность")
     date_employment = models.DateField(verbose_name="Дата принятия на работу")
     date_dismissal = models.DateField(verbose_name="Дата увольнения", blank=True, null=True)
-    id_work = models.ForeignKey(Account, on_delete=models.RESTRICT, verbose_name='ID встречи', blank=True, null=True)
 
     def __str__(self) -> str:  
         return f'''{self.id_employee} '''
